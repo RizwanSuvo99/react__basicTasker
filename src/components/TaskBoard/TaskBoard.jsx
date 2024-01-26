@@ -14,6 +14,9 @@ const TaskBoard = () => {
     isFavourite: true,
   };
   const [tasks, setTasks] = useState([defaultTask]);
+  const handleAddTask = () => {
+    console.log("New task added....");
+  };
 
   return (
     <section className="mb-20" id="tasks">
@@ -22,8 +25,8 @@ const TaskBoard = () => {
           <SearchTask />
         </div>
         <div className="rounded-xl border border-[rgba(206,206,206,0.12)] bg-[#1D212B] px-6 py-8 md:px-9 md:py-16">
-          <TaskActions />
-          <TaskLists tasks={tasks}/>
+          <TaskActions onAddClick={handleAddTask} />
+          <TaskLists tasks={tasks} />
         </div>
       </div>
     </section>
