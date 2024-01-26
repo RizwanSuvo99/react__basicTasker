@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { FaRegStar, FaStar } from "react-icons/fa";
-const TaskLists = ({ tasks, onEdit }) => {
+const TaskLists = ({ tasks, onEdit, onDelete, onFav }) => {
   return (
     <div className="overflow-auto">
       <table className="table-fixed overflow-auto xl:w-full">
@@ -36,11 +36,13 @@ const TaskLists = ({ tasks, onEdit }) => {
               key={task.id}
             >
               <td>
-                {task.isFavourite ? (
-                  <FaStar color="yellow" />
-                ) : (
-                  <FaStar color="gray" />
-                )}
+                <button onClick={()=>onFav(task.id)}>
+                  {task.isFavourite ? (
+                    <FaStar color="yellow" />
+                  ) : (
+                    <FaStar color="gray" />
+                  )}
+                </button>
               </td>
               <td>{task.title}</td>
               <td>
@@ -60,8 +62,16 @@ const TaskLists = ({ tasks, onEdit }) => {
               <td className="text-center">{task.priority}</td>
               <td>
                 <div className="flex items-center justify-center space-x-3">
-                  <button className="text-red-500">Delete</button>
-                  <button className="text-blue-500" onClick={()=>onEdit(task)}>
+                  <button
+                    className="text-red-500"
+                    onClick={() => onDelete(task.id)}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    className="text-blue-500"
+                    onClick={() => onEdit(task)}
+                  >
                     Edit
                   </button>
                 </div>

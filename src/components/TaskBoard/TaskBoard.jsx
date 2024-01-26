@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SearchTask from "./SearchTask/SearchTask";
 import TaskActions from "./TaskActions.jsx/TaskActions";
 import TaskLists from "./TaskLists/TaskLists";
@@ -28,9 +28,10 @@ const TaskBoard = () => {
         }
         return task;
       });
-      setTasks(updatedTasks);
+      setTasks([...updatedTasks]);
     }
     setShowAddModal(false);
+    setTaskToUpdate(null);
   };
 
   const handleEditTask = (task) => {
@@ -38,18 +39,58 @@ const TaskBoard = () => {
     setShowAddModal(true);
   };
 
+  const handleCloseClick = () => {
+    setShowAddModal(false);
+    setTaskToUpdate(null);
+  };
+
+  const handleDeleteTask = (taskId) => {
+    const filteredTasks = tasks.filter((task) => task.id !== taskId);
+    setTasks([...filteredTasks]);
+  };
+
+  const handleDeleteAllClick = () => {
+    setTasks([]);
+  };
+
+  const handleFavourite = (taskId) => {
+    const taskIndex = tasks.findIndex((task) => task.id === taskId);
+    const newTasks = [...tasks];
+    newTasks[taskIndex].isFavourite = !newTasks[taskIndex].isFavourite;
+    setTasks([...newTasks]);
+  };
+
+  const handleSearch = (searchTerm) => {
+    const filteredTasks = tasks.filter((task) =>
+      task.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setTasks([...filteredTasks]);
+  };
+
   return (
     <section className="mb-20" id="tasks">
       {showAddModal && (
-        <AddTaskModal onSave={handleAddTask} taskToUpdate={taskToUpdate} />
+        <AddTaskModal
+          onSave={handleAddTask}
+          onCloseClick={handleCloseClick}
+          taskToUpdate={taskToUpdate}
+        />
       )}
       <div className="container">
         <div className="p-2 flex justify-end">
-          <SearchTask />
+          <SearchTask onSearch={handleSearch} />
         </div>
         <div className="rounded-xl border border-[rgba(206,206,206,0.12)] bg-[#1D212B] px-6 py-8 md:px-9 md:py-16">
-          <TaskActions onAddClick={() => setShowAddModal(true)} />
-          <TaskLists tasks={tasks} onEdit={handleEditTask} />
+          <TaskActions
+            onDeleteAllClick={handleDeleteAllClick}
+            onAddClick={() => setShowAddModal(true)}
+          />
+          <TaskLists
+            tasks={tasks}
+            onEdit={handleEditTask}
+            onDelete={handleDeleteTask}
+            onFav={handleFavourite}
+          />
         </div>
       </div>
     </section>
